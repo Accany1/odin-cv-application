@@ -61,6 +61,14 @@ input {
   border: 2px #242424;
 }
 
+textarea {
+  height: 60px;
+  max-width: 43vw;
+  border-radius: 3px;
+  background-color: rgb(95, 95, 95);
+  border: 2px #242424;
+}
+
 .overall-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -80,6 +88,19 @@ form {
   display: flex;
   flex-direction: column;
   margin: 15px 0;
+}
+
+.personal-holding {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.personal-output {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .education-container {
@@ -118,4 +139,14 @@ form {
   height: 45vw;
   padding: 1vw;
   overflow: none;
+}
+
+.school-title {
+  font-size: 1.3em;
+}
+
+.date-title,
+.study-title {
+  font-size: 0.8em;
+  color: #6d6d6d;
 }
