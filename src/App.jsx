@@ -14,7 +14,7 @@ function SectionInput({name, type, setFunction, label}) {
   )
 }
 
-function EducationInput({setSchool,school,label,title,year,setYear,setTitle}) {
+function EducationInput({setSchool,school,label,title,year,setYear,setTitle, setDelete}) {
   return (
       <div className="education-container">
         <div className="education-holding">
@@ -29,7 +29,7 @@ function EducationInput({setSchool,school,label,title,year,setYear,setTitle}) {
           <label htmlFor={label}>Year of study: </label>
           <input type="number" name={label} value={year} onChange={setYear} />
         </div>
-        <button className="delete-button" onClick={() => setEducation(education.filter((e, i) => i !== index))}>Delete</button>
+        <button className="delete-button" onClick={() => setDelete()}>Delete</button>
       </div>
   )
 }
@@ -49,61 +49,53 @@ function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [schoolID, setSchoolID] = useState(0)
-  const [education, setEducation] = useState([{id:schoolID, school:'school of meh', title:'degree of meh', year:'2023'}])
-
-  
+  const [education, setEducation] = useState([])
 
   function EducationAdd() {
-    // add school of study
-    const container = document.querySelector('.education-topline')
-    const eduDiv = document.createElement("div")
-    eduDiv.classList.add("education-container")
-    const holdingDiv1 = document.createElement("div")
-    holdingDiv1.classList.add("education-holding")
-    const schoolLabel = document.createElement("label")
-    schoolLabel.htmlFor = "school"
-    schoolLabel.innerText = "School: "
-    holdingDiv1.appendChild(schoolLabel)
-    const schoolNameInput = document.createElement("input")
-    schoolNameInput.type = "text"
-    holdingDiv1.appendChild(schoolNameInput)
-    eduDiv.appendChild(holdingDiv1)
-
-    // add title of study
-    const holdingDiv2 = document.createElement("div")
-    holdingDiv2.classList.add("education-holding")
-    const titleLabel = document.createElement("label")
-    titleLabel.htmlFor = "title"
-    titleLabel.innerText = "Title of study: "
-    holdingDiv2.appendChild(titleLabel)
-    const titleNameInput = document.createElement("input")
-    titleNameInput.type = "text"
-    holdingDiv2.appendChild(titleNameInput)
-    eduDiv.appendChild(holdingDiv2)
-
-    // add date of study
-    const holdingDiv3 = document.createElement("div")
-    holdingDiv3.classList.add("education-holding")
-    const dateLabel = document.createElement("label")
-    dateLabel.htmlFor = "date"
-    dateLabel.innerText = "Date of study: "
-    holdingDiv3.appendChild(dateLabel)
-    const dateNameInput = document.createElement("input")
-    dateNameInput.type = "date"
-    holdingDiv3.appendChild(dateNameInput)
-    eduDiv.appendChild(holdingDiv3)
-
-    // delete button
-    const deleteButton = document.createElement("button")
-    deleteButton.classList.add("delete-button")
-    deleteButton.innerText = "Delete"
-    deleteButton.addEventListener("click", () => {
-      container.removeChild(eduDiv)
-    })
-    eduDiv.appendChild(deleteButton)
-
-    container.appendChild(eduDiv)
+    setEducation([...education, {id: schoolID,school:'', title:'', year:''}])
+    setSchoolID(schoolID + 1)
   }
+
+  function EducationDelete(index) {
+    setEducation(education.filter((e) => e.id !== index))
+  }
+
+  const HandleSchoolChange = (a, e) => {
+    const newData = a
+    let newEducation = [...education]
+    
+    for (let i = 0; i < newEducation.length; i++) {
+      if (newEducation[i].id === e.id) {
+        newEducation[i].school = newData
+      }
+    }
+    return newEducation
+  }
+
+  const HandleTitleChange = (a, e) => {
+    const newData = a
+    let newEducation = [...education]
+    
+    for (let i = 0; i < newEducation.length; i++) {
+      if (newEducation[i].id === e.id) {
+        newEducation[i].title = newData
+      }
+    }
+    return newEducation
+  }
+
+  const HandleYearChange = (a, e) => {
+    const newData = a
+    let newEducation = [...education]
+    
+    for (let i = 0; i < newEducation.length; i++) {
+      if (newEducation[i].id === e.id) {
+        newEducation[i].year = newData
+      }
+    }
+    return newEducation
+  }
+
 
   return (
     <>
@@ -117,31 +109,7 @@ function App() {
             <h1>Education</h1>
             <div className="education-topline"></div>
             {/* <EducationInput school={education.school} label="school" title={education.title} year={education.year} setSchool={(e) => setEducation({...education, school:e.target.value})} setTitle={(e) => setEducation({...education, title:e.target.value})} setYear={(e) => setEducation({...education, year:e.target.value})} /> */}
-            {education.map((e, i) => {return <EducationInput key={i} school={e.school} label="school" title={e.title} year={e.year} setSchool={(e) => setEducation(
-              education.map((education, index) => {
-                if (index === i) {
-                  return {...education, school:e.target.value}
-                } else {
-                  return education
-                }
-              })
-            )} setTitle={(e) => setEducation(
-              education.map((education, index) => {
-                if (index === i) {
-                  return {...education, title:e.target.value}
-                } else {
-                  return education
-                }
-              })
-            )} setYear={(e) => setEducation(
-              education.map((education, index) => {
-                if (index === i) {
-                  return {...education, year:e.target.value}
-                } else {
-                  return education
-                }
-              })
-            )} />})}
+            {education.map((e) => {return <EducationInput key={e.id} school={e.school} label="school" title={e.title} year={e.year} setSchool={(a) => setEducation(HandleSchoolChange(a.target.value,e))} setTitle={(a) => setEducation(HandleTitleChange(a.target.value,e))} setYear={(a) => setEducation(HandleYearChange(a.target.value,e))} setDelete={() => EducationDelete(e.id)} />})}
             <div className="add-education" onClick={EducationAdd}>+ Add education</div>
           </form>
         </div>
