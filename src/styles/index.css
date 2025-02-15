@@ -103,16 +103,25 @@ form {
   margin-bottom: 20px;
 }
 
-.education-container {
+.education-container,
+.experience-container {
   display: flex;
   flex-direction: column;
   margin: 15px 0;
   gap: 10px;
 }
 
-.education-holding {
+.education-holding,
+.experience-holding {
   display: flex;
   flex-direction: column;
+}
+
+.education-date,
+.experience-date {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px 20px;
 }
 
 .delete-button {
@@ -120,7 +129,8 @@ form {
   margin-left: auto;
 }
 
-.add-education:hover {
+.add-education:hover,
+.add-experience:hover {
   cursor: pointer;
 }
 
@@ -149,4 +159,9 @@ form {
 .study-title {
   font-size: 0.8em;
   color: #6d6d6d;
+}
+
+.experience-output,
+.education-output {
+  margin-bottom: 20px;
 }

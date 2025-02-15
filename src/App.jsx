@@ -1,74 +1,94 @@
 import { useState } from 'react'
+import SectionInput from './components/section.jsx'
+import {ExperienceInput, ExperienceOutput} from './components/experience.jsx'
+import {EducationInput, EducationOutput} from './components/education.jsx'
 
-function SectionInput({name, type, setFunction, label}) {
-  return (
-    <div className='form-group'>
-      <label htmlFor={name}>{label}</label>
-      <input 
-        type={type}
-        value={name}
-        name = {name}
-        onChange={setFunction}
-      />
-    </div>
-  )
-}
 
-function EducationInput({setSchool,school,label,title,startDate,endDate,setStartDate,setEndDate,setTitle, setDelete, description, setDescription}) {
-  return (
-      <div className="education-container">
-        <div className="education-holding">
-          <label htmlFor={label}>School: </label>
-          <input type="text" name={label} value={school} onChange={setSchool} />
-        </div>
-        <div className="education-holding">
-          <label htmlFor={label}>Title of study: </label>
-          <input type="text" name={label} value={title} onChange={setTitle} />
-        </div>
-        <div className="education-holding">
-          <label htmlFor={label}>Start Date: </label>
-          <input type="date" name={label} value={startDate} onChange={setStartDate} />
-        </div>
-        <div className="education-holding">
-          <label htmlFor={label}>End Date: </label>
-          <input type="date" name={label} value={endDate} onChange={setEndDate} />
-        </div>
-        <div className="education-holding">
-          <label htmlFor={label}>Description: </label>
-          <textarea name={label} value={description} onChange={setDescription} />
-        </div>
-        <button className="delete-button" onClick={() => setDelete()}>Delete</button>
-      </div>
-  )
-}
-
-function EducationOutput({school, title, startDate, endDate, description}) {
-  return (
-    <div className="education-output">
-      <div className="result-holding">
-        <div className='school-title'>{school}</div>
-      </div>
-      <div className="result-holding">
-        <div className='study-title'>{title}</div>
-      </div>
-      <div className="result-holding">
-        <div className='date-title'>{startDate} - {endDate}</div>
-      </div>
-      <div className="result-holding">
-        <div className='description'>{description}</div>
-      </div>
-    </div>
-  )
-}
 
 function App() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [schoolID, setSchoolID] = useState(0)
+  const [experienceID, setExperienceID] = useState(0)
   const [educationVisibility, setEducationVisibility] = useState('none')
+  const [experienceVisibility, setExperienceVisibility] = useState('none')
   const [education, setEducation] = useState([])
   const [experience, setExperience] = useState([])
+
+  function ExperienceAdd() {
+    setExperience([...experience, {id: experienceID,company:'', position:'', startDate:'', endDate:'', description:''}])
+    setExperienceVisibility('block')
+    setExperienceID(experienceID + 1)
+  }
+
+  function ExperienceDelete(index) {
+    setExperience(experience.filter((e) => e.id !== index))
+    if (experience.length === 1) {
+      setExperienceVisibility('none')
+    }
+  }
+
+  const HandleCompanyChange = (a, e) => {
+    const newData = a
+    let newExperience = [...experience]
+
+    for (let i = 0; i < newExperience.length; i++) {
+      if (newExperience[i].id === e.id) {
+        newExperience[i].company = newData
+      }
+    }
+    return newExperience
+  }
+
+  const HandlePositionChange = (a, e) => {
+    const newData = a
+    let newExperience = [...experience]
+    
+    for (let i = 0; i < newExperience.length; i++) {
+      if (newExperience[i].id === e.id) {
+        newExperience[i].position = newData
+      }
+    }
+    return newExperience
+  }
+
+  const HandleExperienceStartDateChange = (a, e) => {
+    const newData = a
+    let newExperience = [...experience]
+    
+    for (let i = 0; i < newExperience.length; i++) {
+      if (newExperience[i].id === e.id) {
+        newExperience[i].startDate = newData
+      }
+    }
+    return newExperience
+  }
+
+  const HandleExperienceEndDateChange = (a, e) => {
+    const newData = a
+    let newExperience = [...experience]
+    
+    for (let i = 0; i < newExperience.length; i++) {
+      if (newExperience[i].id === e.id) {
+        newExperience[i].endDate = newData
+      }
+    }
+    return newExperience
+  }
+
+
+  const HandleExperienceDescriptionChange = (a, e) => {
+    const newData = a
+    let newExperience = [...experience]
+    
+    for (let i = 0; i < newExperience.length; i++) {
+      if (newExperience[i].id === e.id) {
+        newExperience[i].description = newData
+      }
+    }
+    return newExperience
+  }
 
   function EducationAdd() {
     setEducation([...education, {id: schoolID,school:'', title:'', startDate:'', endDate:'', description:''}])
@@ -78,7 +98,7 @@ function App() {
 
   function EducationDelete(index) {
     setEducation(education.filter((e) => e.id !== index))
-    if (education.length === 0) {
+    if (education.length === 1) {
       setEducationVisibility('none')
     }
   }
@@ -152,6 +172,11 @@ function App() {
             <SectionInput name={name} label='Name: ' type="text" setFunction={(e) => setName(e.target.value)} />
             <SectionInput name={email} label='Email: ' type="email" setFunction={(e) => setEmail(e.target.value)} />
             <SectionInput name={phone} label='Phone: ' type="number" setFunction={(e) => setPhone(e.target.value)} />
+            <h1>Experience</h1>
+            <div className="experience-topline">
+            {experience.map((e) => {return <ExperienceInput key={e.id} company={e.company} label="company" position={e.position} startDate={e.startDate} endDate={e.endDate} description={e.description} setCompany={(a) => setExperience(HandleCompanyChange(a.target.value,e))} setPosition={(a) => setExperience(HandlePositionChange(a.target.value,e))} setStartDate={(a) => setExperience(HandleExperienceStartDateChange(a.target.value,e))} setEndDate={(a) => setExperience(HandleExperienceEndDateChange(a.target.value,e))} setDescription={(a) => setExperience(HandleExperienceDescriptionChange(a.target.value,e))} setDelete={() => ExperienceDelete(e.id)} />})}
+            <div className="add-experience" onClick={ExperienceAdd}>+ Add experience</div>
+            </div>
             <h1>Education</h1>
             <div className="education-topline"></div>
             {education.map((e) => {return <EducationInput key={e.id} school={e.school} label="school" title={e.title} startDate={e.startDate} endDate={e.endDate} description={e.description} setSchool={(a) => setEducation(HandleSchoolChange(a.target.value,e))} setTitle={(a) => setEducation(HandleTitleChange(a.target.value,e))} setStartDate={(a) => setEducation(HandleStartDateChange(a.target.value,e))} setEndDate={(a) => setEducation(HandleEndDateChange(a.target.value,e))} setDescription={(a) => setEducation(HandleDescriptionChange(a.target.value,e))} setDelete={() => EducationDelete(e.id)} />})}
@@ -172,6 +197,8 @@ function App() {
                 <div>{phone}</div>
               </div>
             </div>
+            <h2> {experienceVisibility === 'block' && 'Experience'}</h2>
+            {experience.map((e) => {return <ExperienceOutput key={e.id} company={e.company} position={e.position} startDate={e.startDate} endDate={e.endDate} description={e.description} />})}
             <h2> {educationVisibility === 'block' && 'Education'}</h2>
             {education.map((e) => {return <EducationOutput key={e.id} school={e.school} title={e.title} startDate={e.startDate} endDate={e.endDate} description={e.description} />})}
           </div>
